@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define MAX_FRAMES 10
+#define MAX_PAGES 50
+
+int frames[MAX_FRAMES];
+int pages[MAX_PAGES];
+int n_frames, n_pages;
+int page_faults;
+
+bool is_page_in_frame(int page, int time) {
+    for (int i = 0; i < n_frames; i++) {
+        if (frames[i] == page) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int find_page_to_replace(int time) {
+    int page_to_replace = frames[0];
+    int farthest_time = -1;
+    for (int i = 0; i < n_frames; i++) {
+        bool page_found = false;
+        for (int j = time; j < n_pages; j++) {
+            if (frames[i] == pages[j]) {
+                page_found = true;
+                if (j > farthest_time) {
+                    farthest_time = j;
+                    page_to_replace = frames[i];
+                }
+                break;
+            }
+        }
+        if (!page_found) {
+            return frames[i];
+        }
+    }
+    return page_to_replace;
+}
+
+void print_frames() {
+    for (int i = 0; i < n_frames; i++) {
+        if (frames[i] == -1) {
+            printf("- ");
+        } else {
+            printf("%d ", frames[i]);
+        }
+    }
+    printf("|");
+}
+
+int main() {
+    printf("Enter the number of page frames: ");
+    scanf("%d", &n_frames);
+    printf("Enter the page reference sequence (separated by spaces): ");
+    for (int i = 0; i < MAX_PAGES; i++) {
+        int page;
+        if (scanf("%d", &page) != 1) {
+            break;
+        }
+        pages[n_pages++] = page;
+    }
+
+    for (int i = 0; i < n_frames; i++) {
+        frames[i] = -1;
+    }
+
+    printf("\nPage Frames:\n");
+    for (int i = 0; i < n_pages; i++) {
+        printf("Time %d: ", i+1);
+        int page = pages[i];
+        if (!is_page_in_frame(page, i)) {
+            int page_to_replace = find_page_to_replace(i);
+            for (int j = 0; j < n_frames; j++) {
+                if (frames[j] == page_to_replace) {
+                    frames[j] = page;
+                }
+            }
+            page_faults++;
+        }
+        print_frames();
+        printf("\n");
+    }
+    printf("\nTotal number of page faults: %d\n", page_faults);
+    return 0;
+}
