@@ -1,0 +1,61 @@
+#include <stdio.h>
+
+#define FILE_SIZE 100
+
+// Function to calculate disk I/O operations for contiguous allocation
+int contiguousAllocation(int blockPosition) {
+    if (blockPosition == 0)
+        return FILE_SIZE + 1;
+    else
+        return 2;
+}
+
+// Function to calculate disk I/O operations for linked allocation
+int linkedAllocation(int blockPosition) {
+    if (blockPosition == 0)
+        return FILE_SIZE + 1;
+    else
+        return 2 * (blockPosition + 1);
+}
+
+// Function to calculate disk I/O operations for indexed allocation
+int indexedAllocation(int blockPosition) {
+    if (blockPosition == 0)
+        return FILE_SIZE + 1;
+    else
+        return 2;
+}
+
+int main() {
+    int blockPosition;
+
+    // Test Case: The block is added at the beginning
+    printf("Test Case: Block added at the beginning\n");
+    blockPosition = 0;
+
+    printf("Contiguous Allocation: %d disk I/O operations\n", contiguousAllocation(blockPosition));
+    printf("Linked Allocation: %d disk I/O operations\n", linkedAllocation(blockPosition));
+    printf("Indexed Allocation: %d disk I/O operations\n", indexedAllocation(blockPosition));
+
+    printf("\n");
+
+    // Test Case: The block is added in the middle
+    printf("Test Case: Block added in the middle\n");
+    blockPosition = FILE_SIZE / 2;
+
+    printf("Contiguous Allocation: %d disk I/O operations\n", contiguousAllocation(blockPosition));
+    printf("Linked Allocation: %d disk I/O operations\n", linkedAllocation(blockPosition));
+    printf("Indexed Allocation: %d disk I/O operations\n", indexedAllocation(blockPosition));
+
+    printf("\n");
+
+    // Test Case: The block is added at the end
+    printf("Test Case: Block added at the end\n");
+    blockPosition = FILE_SIZE - 1;
+
+    printf("Contiguous Allocation: %d disk I/O operations\n", contiguousAllocation(blockPosition));
+    printf("Linked Allocation: %d disk I/O operations\n", linkedAllocation(blockPosition));
+    printf("Indexed Allocation: %d disk I/O operations\n", indexedAllocation(blockPosition));
+
+    return 0;
+}
